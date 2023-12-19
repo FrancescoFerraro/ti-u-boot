@@ -8,5 +8,5 @@ jobs:
     uses: varigit-dev/action-workflows/.github/workflows/defconfig-check.yml@master
     with:
       defconfig: >-
-        arm:am62x_var_som_a53_defconfig
+        arm:am62x_var_som_a53_android_defconfig
         arm:am62x_var_som_r5_defconfig
