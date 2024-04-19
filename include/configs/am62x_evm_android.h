@@ -71,21 +71,9 @@
  */
 #define PREPARE_FDT_CMD "prepare_fdt_cmd=" \
 	"echo Preparing FDT...; " \
-	"if test $board_name = am62x_skevm; then " \
-		"echo \"  Reading DTB for am62x_skevm...\"; " \
+	"if test $board_name = VAR-SOM-AM62; then " \
+		"echo \"  Reading DTB for VAR-SOM-AM62...\"; " \
 		"setenv dtb_index 0;" \
-	"elif test $board_name = am62b_p1_skevm; then " \
-		"echo \"  Reading DTB for am62b_p1_skevm...\"; " \
-		"setenv dtb_index 0;" \
-	"elif test $board_name = am62x_lp_skevm; then " \
-		"echo \"  Reading DTB for am62x_lp_skevm...\"; " \
-		"setenv dtb_index 1;" \
-	"elif test $board_name =  am62x_beagleplay; then " \
-		"echo \"  Reading DTB for am62x_beagleplay...\"; " \
-		"setenv dtb_index 2;" \
-	"elif test $board_name =  am62px; then " \
-		"echo \"  Reading DTB for am62px...\"; " \
-		"setenv dtb_index 3;" \
 	"else " \
 		"echo Error: Android boot is not supported for $board_name; " \
 		"exit; " \
