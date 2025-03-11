@@ -9,6 +9,7 @@
 
 #include "am62x_eeprom.h"
 
+int var_setup_mac(struct var_eeprom *eeprom);
 int var_eth_get_rgmii_id_quirk(struct var_eeprom *ep);
 
 #endif
