@@ -75,6 +75,38 @@
 	bootph-all;
 };
 
+&main_pktdma {
+	bootph-all;
+};
+
+/* Required for USB DFU Boot */
+&usb0 {
+	/* Enable peripheral mode only during bootup
+	 * to support DFU while allowing Linux to stay
+	 * in OTG mode
+	 */
+	dr_mode = "peripheral";
+	bootph-pre-ram;
+};
+
+/* Required for USB DFU Boot */
+&usb0_phy_ctrl {
+	bootph-pre-ram;
+};
+
+&usb1 {
+	bootph-all;
+};
+
+/* Required for USB DFU Boot */
+&usbss0 {
+	bootph-pre-ram;
+};
+
+&usbss1 {
+	bootph-all;
+};
+
 &wkup_conf {
 	cpsw_mac_syscon: ethernet-mac-syscon@200 {
 		compatible = "ti,am62p-cpsw-mac-efuse", "syscon";
@@ -82,8 +114,3 @@
 		bootph-all;
 	};
 };
-
-&main_pktdma {
-	bootph-all;
-};
-
