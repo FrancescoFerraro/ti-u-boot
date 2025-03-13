@@ -11,7 +11,7 @@
 &binman {
 
 	tiboot3-am62px-hs-var-som.bin {
-		filename = "tiboot3-am62px-hs-var-som.bin";
+		filename = "tiboot3-am62px-hs-am62px-var-som.bin";
 
 		ti-secure-rom {
 			content = <&u_boot_spl>, <&ti_fs_enc>, <&combined_tifs_cfg>,
@@ -60,7 +60,7 @@
 	};
 
 	tiboot3-am62px-hs-fs-var-som.bin {
-		filename = "tiboot3-am62px-hs-fs-var-som.bin";
+		filename = "tiboot3-am62px-hs-fs-am62px-var-som.bin";
 		symlink = "tiboot3.bin";
 
 		ti-secure-rom {
