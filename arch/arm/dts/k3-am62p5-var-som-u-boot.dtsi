@@ -51,7 +51,32 @@
 	bootph-all;
 };
 
+&main_i2c0 {
+	bootph-all;
+};
+
+&main_i2c0_pins_default {
+	bootph-all;
+};
+
+&main_i2c1 {
+	bootph-all;
+};
+
+&main_i2c1_pins_default {
+	bootph-all;
+};
+
+&main_i2c2 {
+	bootph-all;
+};
+
+&main_i2c2_pins_default {
+	bootph-all;
+};
+
 &main_i2c3 {
+	/delete-property/ power-domains;
 	bootph-all;
 };
 
