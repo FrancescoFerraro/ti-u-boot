@@ -9,7 +9,7 @@
 #define __CONFIG_AM62PX_VAR_SOM_H
 #include <linux/sizes.h>
 
-#define DEFAULT_SDRAM_SIZE              SZ_512M
+#define DEFAULT_SDRAM_SIZE              SZ_1G
 
 /* Now for the remaining common defines */
 #include <configs/ti_armv7_common.h>
