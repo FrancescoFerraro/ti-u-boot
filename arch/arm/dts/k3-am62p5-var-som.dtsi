@@ -78,6 +78,7 @@
 };
 
 &cpsw3g_mdio {
+	pinctrl-names = "default";
 	pinctrl-0 = <&main_mdio1_pins_default>;
 	status = "okay";
 
