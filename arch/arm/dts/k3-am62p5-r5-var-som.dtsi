@@ -5,12 +5,6 @@
  * Copyright (C) 2025 Variscite Ltd. - https://www.variscite.com/
  */
 
-#include "k3-am62p5-var-som.dts"
-#include "k3-am62p5-var-som-u-boot.dtsi"
-
-#include "k3-am62p-ddr-lp4-50-1600.dtsi"
-#include "k3-am62a-ddr.dtsi"
-
 / {
 	aliases {
 		remoteproc0 = &sysctrler;
@@ -76,16 +70,6 @@
 		mbox-names = "tx", "rx", "boot_notify";
 		bootph-all;
 	};
-};
-
-/* WKUP UART0 is used for DM firmware logs */
-&wkup_uart0 {
-	status = "okay";
-};
-
-/* Main UART1 is used for TIFS firmware logs */
-&main_uart1 {
-	status = "okay";
 };
 
 &main_pktdma {

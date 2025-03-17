@@ -114,7 +114,7 @@
 
 #if IS_ENABLED(CONFIG_TARGET_AM62P5_A53_VAR_SOM)
 
-#define SPL_AM62PX_VAR_SOM_DTB "spl/dts/k3-am62p5-var-som.dtb"
+#define SPL_AM62PX_VAR_SOM_DTB "spl/dts/k3-am62p5-var-som-symphony.dtb"
 #define AM62PX_VAR_SOM_DTB "u-boot.dtb"
 
 &binman {
