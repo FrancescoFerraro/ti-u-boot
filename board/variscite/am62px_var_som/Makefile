@@ -11,5 +11,8 @@ obj-y += ../common/am62x_dram.o
 ifndef CONFIG_CPU_V7R
 obj-y += ../common/am62x_mmc.o
 endif
+ifndef CONFIG_SPL_BUILD
+obj-$(CONFIG_VIDEO) += ../common/video.o
+endif
 obj-$(CONFIG_TI_AM65_CPSW_NUSS) += ../common/am62x_eth.o
 obj-${CONFIG_ARCH_K3} += ../common/k3-ddr-init.o

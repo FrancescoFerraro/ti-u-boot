@@ -162,16 +162,21 @@ int splash_display(void)
 	ulong addr;
 	char *s;
 	int x = 0, y = 0, ret;
+
+printf("FF: splash_display 1\n");
+
 	if (!CONFIG_IS_ENABLED(SPLASH_SCREEN))
 		return -ENOSYS;
 	s = env_get("splashimage");
 	if (!s)
 		return -EINVAL;
+printf("FF: splash_display 2\n");
 
 	addr = hextoul(s, NULL);
 	ret = splash_screen_prepare();
 	if (ret)
 		return ret;
+printf("FF: splash_display 3\n");
 
 	splash_get_pos(&x, &y);
 
@@ -179,12 +184,14 @@ int splash_display(void)
 		ret = bmp_display(addr, x, y);
 	else
 		return -ENOSYS;
+printf("FF: splash_display 4\n");
 
 	/* Skip banner output on video console if the logo is not at 0,0 */
 	if (x || y)
 		goto end;
 
 #if CONFIG_IS_ENABLED(VIDEO) && !CONFIG_IS_ENABLED(HIDE_LOGO_VERSION)
+printf("FF: splash_display 5\n");
 	splash_display_banner();
 #endif
 end:

@@ -200,7 +200,6 @@ CONFIG_VIDEO_BMP_GZIP=y
 CONFIG_CMD_BMP=y
 CONFIG_VIDEO_LOGO=y
 
-CONFIG_GPIO_HOG=y
-
 #include <configs/am62x_a53_usbdfu.config>
 #include <configs/am62x_a53_usbmsc.config>
+# #include <configs/am62x_a53_splashscreen.config>

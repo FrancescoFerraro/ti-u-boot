@@ -352,8 +352,10 @@ int stdio_add_devices(void)
 			}
 		}
 		if (IS_ENABLED(CONFIG_SPLASH_SCREEN) &&
-		    IS_ENABLED(CONFIG_CMD_BMP))
+		    IS_ENABLED(CONFIG_CMD_BMP)) {
+			printf("FF: stdio_add_devices \n");
 			splash_display();
+		}
 	}
 
 	drv_system_init();

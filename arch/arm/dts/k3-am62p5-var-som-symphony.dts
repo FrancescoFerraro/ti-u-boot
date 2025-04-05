@@ -15,8 +15,65 @@
 	compatible = "ti,am62p5-sk", "ti,am62p5";
 	model = "Variscite VAR-SOM-AM62P on Symphony-Board";
 
+#if 1
+	backlight_lcd: backlight-lcd {
+		compatible = "gpio-backlight";
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_backlight_pins_default>;
+		gpios = <&main_gpio1 9 GPIO_ACTIVE_HIGH>;
+		default-on;
+	};
+#else
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&epwm1 0 1000000 0>;
+		status = "okay";
+		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
+				      10 11 12 13 14 15 16 17 18 19
+				      20 21 22 23 24 25 26 27 28 29
+				      30 31 32 33 34 35 36 37 38 39
+				      40 41 42 43 44 45 46 47 48 49
+				      50 51 52 53 54 55 56 57 58 59
+				      60 61 62 63 64 65 66 67 68 69
+				      70 71 72 73 74 75 76 77 78 79
+				      80 81 82 83 84 85 86 87 88 89
+				      90 91 92 93 94 95 96 97 98 99
+				      100>;
+		default-brightness-level = <80>;
+	};
+#endif
 	chosen {
 		stdout-path = &main_uart0;
+	};
+
+	panel_lvds: panel-lvds {
+		bootph-pre-ram;
+		compatible = "simple-panel";
+		status= "okay";
+		backlight = <&backlight_lcd>;
+		width-mm = <153>;
+		height-mm = <86>;
+		data-mapping = "jeida-24";
+		panel-timing {
+			bootph-pre-ram;
+			clock-frequency = <30000>;
+			hactive = <800>;
+			vactive = <480>;
+			hback-porch = <40>;
+			hfront-porch = <40>;
+			vback-porch = <29>;
+			vfront-porch = <13>;
+			hsync-len = <48>;
+			vsync-len = <3>;
+			de-active = <1>;
+		};
+
+		port@0 {
+			lcd_in0: endpoint {
+				/*remote-endpoint = <&oldi0_dss0_out>;*/
+				remote-endpoint = <&oldi_out0>;
+			};
+		};
 	};
 
 	vdd_mmc1_ext: regulator-1 {
@@ -71,6 +128,56 @@
 	phy-reset-duration = <10>;
 	phy-reset-post-delay = <20>;
 };
+
+&dphy0 {
+	bootph-all;
+	status = "okay";
+};
+
+&dss0 {
+	bootph-all;
+	status = "okay";
+};
+
+#if 0
+&dss0_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	/* VP1: Output to OLDI */
+	port@0 {
+		reg = <0>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		dss0_dpi0_out0: endpoint@0 {
+			reg = <0>;
+			/*remote-endpoint = <&oldi0_dss0_in>;*/
+			remote-endpoint = <&lvds_tx_ports>;
+		};
+	};
+};
+#else
+&dss0_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	/* VP1: LVDS Output (OLDI TX 0) */
+	port@0 {
+		reg = <0>;
+		oldi_out0: endpoint {
+			remote-endpoint = <&lcd_in0>;
+		};
+	};
+};
+#endif
+
+#if 0
+&epwm1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&main_epwm1_pins_default>;
+};
+#endif
 
 &main_i2c0 {
 	status = "okay";
@@ -132,6 +239,19 @@
 &main_pmx0 {
 	bootph-all;
 
+#if 1
+	lcd_backlight_pins_default: lcd-backlight-pins-default {
+		pinctrl-single,pins = <
+			AM62PX_IOPAD(0x19c, PIN_INPUT_PULLUP, 7) /* (E24) GPIO_1_9 */
+		>;
+	};
+#else
+	main_epwm1_pins_default: main-epwm1-pins-default {
+		pinctrl-single,pins = <
+			AM62PX_IOPAD(0x019c, PIN_OUTPUT, 6) /* (E24) MCASP0_AXR1.EHRPWM1_A */
+		>;
+	};
+#endif
 	main_i2c0_pins_default: main-i2c0-default-pins {
 		pinctrl-single,pins = <
 			AM62PX_IOPAD(0x01e0, PIN_INPUT_PULLUP, 0) /* (B25) I2C0_SCL */
@@ -232,6 +352,29 @@
 		bootph-all;
 	};
 };
+
+#if 0
+&oldi0_dss0_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	port@0 {
+		reg = <0>;
+
+		oldi0_dss0_in: endpoint {
+			remote-endpoint = <&dss0_dpi0_out0>;
+		};
+	};
+
+	port@1 {
+		reg = <1>;
+
+		oldi0_dss0_out: endpoint {
+			remote-endpoint = <&lcd_in0>;
+		};
+	};
+};
+#endif
 
 &sdhci1 {
 	/* SD/MMC */

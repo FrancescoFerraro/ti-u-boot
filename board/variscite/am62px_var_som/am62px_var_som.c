@@ -60,12 +60,6 @@ static struct splash_location default_splash_locations[] = {
 		.devpart	= "1:1",
 	},
 };
-
-int splash_screen_prepare(void)
-{
-	return splash_source_load(default_splash_locations,
-				ARRAY_SIZE(default_splash_locations));
-}
 #endif
 
 int board_init(void)
@@ -171,8 +165,7 @@ void spl_board_init(void)
 	       MCU_CTRL_DEVICE_CLKOUT_32K_CTRL);
 
 	enable_caches();
-	if (IS_ENABLED(CONFIG_SPL_SPLASH_SCREEN) && IS_ENABLED(CONFIG_SPL_BMP))
-		splash_display();
+printf ("FF: spl_board_init\n");
 }
 #endif
 
@@ -181,13 +174,16 @@ int ft_board_setup(void *blob, struct bd_info *bd)
 {
 	int ret = -1;
 
-	if (IS_ENABLED(CONFIG_FDT_SIMPLEFB))
+	if (IS_ENABLED(CONFIG_FDT_SIMPLEFB)) {
+		printf ("FF:A ft_board_setup\n");
 		ret = fdt_simplefb_enable_and_mem_rsv(blob);
+	}
 
 	/* If simplefb is not enabled and video is active, then at least reserve
 	 * the framebuffer region to preserve the splash screen while OS is booting
 	 */
 	if (IS_ENABLED(CONFIG_VIDEO) && IS_ENABLED(CONFIG_OF_LIBFDT)) {
+		printf ("FF:B ft_board_setup\n");
 		if (ret && video_is_active())
 			return fdt_add_fb_mem_rsv(blob);
 	}

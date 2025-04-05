@@ -393,10 +393,10 @@ int device_of_to_plat(struct udevice *dev)
 
 	if (!dev)
 		return -EINVAL;
-
+	//printf("FF:1 device_of_to_plat: dev->name:<%s>\n", dev->name);
 	if (dev_get_flags(dev) & DM_FLAG_PLATDATA_VALID)
 		return 0;
-
+	//printf("FF:2\n");
 	/*
 	 * This is not needed if binding is disabled, since data is allocated
 	 * at build time.
@@ -414,8 +414,10 @@ int device_of_to_plat(struct udevice *dev)
 			 * (e.g. PCI bridge devices). Test the flags again
 			 * so that we don't mess up the device.
 			 */
-			if (dev_get_flags(dev) & DM_FLAG_PLATDATA_VALID)
+			if (dev_get_flags(dev) & DM_FLAG_PLATDATA_VALID) {
+				//printf("FF:3\n");
 				return 0;
+			}
 		}
 
 		ret = device_alloc_priv(dev);
@@ -425,6 +427,7 @@ int device_of_to_plat(struct udevice *dev)
 	drv = dev->driver;
 	assert(drv);
 
+	//printf("FF: device_of_to_plat: drv->name:<%s> drv->of_to_plat:<%p>\n", drv->name, drv->of_to_plat);
 	if (drv->of_to_plat &&
 	    (CONFIG_IS_ENABLED(OF_PLATDATA) || dev_has_ofnode(dev))) {
 		ret = drv->of_to_plat(dev);
@@ -485,11 +488,14 @@ int device_probe(struct udevice *dev)
 
 	if (!dev)
 		return -EINVAL;
+	//printf("FF: 1 device_probe name:<%s>\n", dev->name);
 
 	if (dev_get_flags(dev) & DM_FLAG_ACTIVATED)
 		return 0;
+	//printf("FF: 2 device_probe\n");
 
 	ret = device_notify(dev, EVT_DM_PRE_PROBE);
+	//printf("FF: 3 device_probe ret:<%d>\n", ret);
 	if (ret)
 		return ret;
 

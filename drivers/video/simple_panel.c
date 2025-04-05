@@ -37,10 +37,10 @@ static int simple_panel_enable_backlight(struct udevice *dev)
 	struct simple_panel_priv *priv = dev_get_priv(dev);
 	int ret;
 
-	debug("%s: start, backlight = '%s'\n", __func__, priv->backlight->name);
+	printf("FF: %s: start, backlight = '%s'\n", __func__, priv->backlight->name);
 	dm_gpio_set_value(&priv->enable, 1);
 	ret = backlight_enable(priv->backlight);
-	debug("%s: done, ret = %d\n", __func__, ret);
+	printf("FF: %s: done, ret = %d\n", __func__, ret);
 	if (ret)
 		return ret;
 
@@ -52,10 +52,10 @@ static int simple_panel_set_backlight(struct udevice *dev, int percent)
 	struct simple_panel_priv *priv = dev_get_priv(dev);
 	int ret;
 
-	debug("%s: start, backlight = '%s'\n", __func__, priv->backlight->name);
+	printf("FF: %s: start, backlight = '%s'\n", __func__, priv->backlight->name);
 	dm_gpio_set_value(&priv->enable, 1);
 	ret = backlight_set_brightness(priv->backlight, percent);
-	debug("%s: done, ret = %d\n", __func__, ret);
+	printf("FF: %s: done, ret = %d\n", __func__, ret);
 	if (ret)
 		return ret;
 
@@ -66,7 +66,7 @@ static int simple_panel_get_display_timing(struct udevice *dev,
 					   struct display_timing *timings)
 {
 	const void *blob = gd->fdt_blob;
-
+printf("FF: simple_panel_get_display_timing 1\n");
 	return fdtdec_decode_display_timing(blob, dev_of_offset(dev),
 					    0, timings);
 }
@@ -75,30 +75,33 @@ static int simple_panel_of_to_plat(struct udevice *dev)
 {
 	struct simple_panel_priv *priv = dev_get_priv(dev);
 	int ret;
-
+printf("FF: simple_panel_of_to_plat 1\n");
 	if (CONFIG_IS_ENABLED(DM_REGULATOR)) {
 		ret = uclass_get_device_by_phandle(UCLASS_REGULATOR, dev,
 						   "power-supply", &priv->reg);
 		if (ret) {
-			debug("%s: Warning: cannot get power supply: ret=%d\n",
+			printf("FF: %s: Warning: cannot get power supply: ret=%d\n",
 			      __func__, ret);
 			if (ret != -ENOENT)
 				return ret;
 		}
 	}
+printf("FF: simple_panel_of_to_plat 2\n");
 
 	ret = uclass_get_device_by_phandle(UCLASS_PANEL_BACKLIGHT, dev,
 						   "backlight", &priv->backlight);
 	if (ret) {
-		debug("%s: Cannot get backlight: ret=%d\n", __func__, ret);
+		printf("FF: %s: Cannot get backlight: ret=%d\n", __func__, ret);
 		if (ret != -ENOENT)
 			return log_ret(ret);
 	}
 
 	ret = gpio_request_by_name(dev, "enable-gpios", 0, &priv->enable,
 				   GPIOD_IS_OUT);
+printf("FF: simple_panel_of_to_plat 3\n");
+
 	if (ret) {
-		debug("%s: Warning: cannot get enable GPIO: ret=%d\n",
+		printf("FF: %s: Warning: cannot get enable GPIO: ret=%d\n",
 		      __func__, ret);
 		if (ret != -ENOENT)
 			return log_ret(ret);
@@ -114,12 +117,15 @@ static int simple_panel_probe(struct udevice *dev)
 	const u32 dsi_data = dev_get_driver_data(dev);
 	int ret;
 
+printf("FF: simple_panel_probe 1\n");
+
 	ret = regulator_set_enable_if_allowed(priv->reg, true);
 	if (ret && ret != -ENOSYS) {
-		debug("%s: failed to enable regulator '%s' %d\n",
+		printf("FF: %s: failed to enable regulator '%s' %d\n",
 		      __func__, priv->reg->name, ret);
 		return ret;
 	}
+printf("FF: simple_panel_probe 2\n");
 
 	switch (dsi_data) {
 	case PANASONIC_VVX10F004B00:
@@ -128,6 +134,7 @@ static int simple_panel_probe(struct udevice *dev)
 		break;
 	case PANEL_NON_DSI:
 	default:
+printf("FF: simple_panel_probe 3\n");
 		break;
 	}
 
