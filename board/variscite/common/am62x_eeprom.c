@@ -25,6 +25,23 @@ int var_eeprom_is_valid(struct var_eeprom *ep)
 	return 1;
 }
 
+int read_eeprom_header(void) {
+	struct var_eeprom *ep = VAR_EEPROM_DATA;
+	struct var_eeprom eeprom = {0};
+	int ret = 0;
+
+	if (!var_eeprom_is_valid(ep)) {
+		ret = var_eeprom_read_header(&eeprom);
+		if (ret) {
+			printf("%s EEPROM read failed.\n", __func__);
+			return -1;
+		}
+		memcpy(ep, &eeprom, sizeof(*ep));
+	}
+
+	return ret;
+}
+
 int var_eeprom_get_dram_size(struct var_eeprom *ep, uint64_t *size)
 {
 	/* No data in EEPROM - return default DRAM size */
@@ -36,6 +53,7 @@ int var_eeprom_get_dram_size(struct var_eeprom *ep, uint64_t *size)
 	*size = ((uint64_t)ep->dramsize * 128UL) * (1UL << 20);
 
 	return 0;
+
 }
 
 #if defined(CONFIG_DM_I2C)
@@ -150,7 +168,11 @@ void var_eeprom_print_prod_info(struct var_eeprom *ep)
 	/* Read second part of P/N  */
 	memcpy(partnum + sizeof(ep->partnum), ep->partnum2, sizeof(ep->partnum2));
 
+#if defined(CONFIG_SOC_K3_AM625)
 	printf("\nPart number: VSM-AM62-%.*s\n", (int)sizeof(partnum), partnum);
+#else
+	printf("\nPart number: VSM-AM62P-%.*s\n", (int)sizeof(partnum), partnum);
+#endif
 	printf("Assembly: AS%.*s\n", (int)sizeof(ep->assembly), (char *)ep->assembly);
 
 	printf("Production date: %.*s %.*s %.*s\n",
@@ -174,7 +196,7 @@ void var_eeprom_print_prod_info(struct var_eeprom *ep)
 }
 #endif
 
-#if defined(CONFIG_K3_AM64_DDRSS)
+#if defined(CONFIG_K3_AM64_DDRSS) || defined(CONFIG_K3_AM62A_DDRSS)
 static int var_eeprom_crc32(struct var_eeprom *ep, const uint32_t offset,
 							const uint32_t len, uint32_t * crc32_val) {
 	uint32_t i;

@@ -28,22 +28,7 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-int read_eeprom_header(void) {
-	struct var_eeprom *ep = VAR_EEPROM_DATA;
-	struct var_eeprom eeprom = {0};
-	int ret = 0;
-
-	if (!var_eeprom_is_valid(ep)) {
-		ret = var_eeprom_read_header(&eeprom);
-		if (ret) {
-			printf("%s EEPROM read failed.\n", __func__);
-			return -1;
-		}
-		memcpy(ep, &eeprom, sizeof(*ep));
-	}
-
-	return ret;
-}
+int read_eeprom_header(void);
 
 #if CONFIG_IS_ENABLED(SPLASH_SCREEN)
 static struct splash_location default_splash_locations[] = {
@@ -173,6 +158,9 @@ void spl_board_init(void)
 	enable_caches();
 	if (IS_ENABLED(CONFIG_SPL_SPLASH_SCREEN) && IS_ENABLED(CONFIG_SPL_BMP))
 		splash_display();
+
+	/* Init DRAM size for R5/A53 SPL */
+	dram_init_banksize();
 }
 #endif
 

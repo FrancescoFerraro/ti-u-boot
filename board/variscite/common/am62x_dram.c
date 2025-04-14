@@ -13,18 +13,28 @@
 DECLARE_GLOBAL_DATA_PTR;
 
 #define AM64_DDRSS_SS_BASE  0x0F300000
+#define SZ_6G	(SZ_2G + SZ_4G)
+#define SZ_8G	(SZ_4G<<1)
 
 typedef struct {
 	uint64_t start;
 	uint64_t max_size;
 } ddr_bank_t;
 
+#if defined(CONFIG_SOC_K3_AM625)
 static ddr_bank_t am62x_ddr_banks[] = {
 	{.start = 0x80000000, .max_size = SZ_2G},
 	{.start = 0x880000000, .max_size = SZ_2G},
 	{.start = 0x900000000, .max_size = SZ_4G},
 	{.start = 0, .max_size = 0}
 };
+#else
+static ddr_bank_t am62x_ddr_banks[] = {
+	{.start = 0x80000000, .max_size = SZ_2G},
+	{.start = 0x880000000, .max_size = SZ_6G},
+	{.start = 0, .max_size = 0}
+};
+#endif
 
 static int get_dram_size(uint64_t *size) {
 	struct var_eeprom *ep = VAR_EEPROM_DATA;
@@ -50,14 +60,10 @@ int var_dram_init_mem_size_base(void) {
 	 Update gd->ram_size according to EEPROM
 	 Limit to 2GB for 32bit architecture (r5)
 	*/
-#ifdef CONFIG_PHYS_64BIT
-	gd->ram_size = (phys_size_t) dram_size;
-#else
 	if ((uint64_t) dram_size > SZ_2G)
 		gd->ram_size = (phys_size_t) SZ_2G;
 	else
 		gd->ram_size = (phys_size_t) dram_size;
-#endif
 
 	/* Set V2A_CTL_REG */
 	switch ((long long unsigned int) dram_size) {
@@ -72,6 +78,9 @@ int var_dram_init_mem_size_base(void) {
 			break;
 		case SZ_4G:
 			writel( ((readl(AM64_DDRSS_SS_BASE + 0x020) & ~0x3FF) | 0x210), AM64_DDRSS_SS_BASE + 0x020);
+			break;
+		case SZ_8G:
+			writel( ((readl(AM64_DDRSS_SS_BASE + 0x020) & ~0x3FF) | 0x231), AM64_DDRSS_SS_BASE + 0x020);
 			break;
 	}
 
