@@ -56,14 +56,19 @@ int var_dram_init_mem_size_base(void) {
 		return ret;
 	}
 
+#if defined(CONFIG_SOC_K3_AM625)
 	/*
 	 Update gd->ram_size according to EEPROM
 	 Limit to 2GB for 32bit architecture (r5)
 	*/
+#ifdef CONFIG_PHYS_64BIT
+	gd->ram_size = (phys_size_t) dram_size;
+#else
 	if ((uint64_t) dram_size > SZ_2G)
 		gd->ram_size = (phys_size_t) SZ_2G;
 	else
 		gd->ram_size = (phys_size_t) dram_size;
+#endif
 
 	/* Set V2A_CTL_REG */
 	switch ((long long unsigned int) dram_size) {
@@ -79,10 +84,39 @@ int var_dram_init_mem_size_base(void) {
 		case SZ_4G:
 			writel( ((readl(AM64_DDRSS_SS_BASE + 0x020) & ~0x3FF) | 0x210), AM64_DDRSS_SS_BASE + 0x020);
 			break;
+	}
+#else
+	if ((uint64_t) dram_size > SZ_2G)
+		gd->ram_size = (phys_size_t) SZ_2G;
+	else
+		gd->ram_size = (phys_size_t) dram_size;
+
+	/*
+	 * Set V2A_CTL_REG
+	 * Calculated as: (SDRAM_IDX << 5) | REGION_IDX
+	 * Size SDRAM_IDX REGION_IDX V2A_CTL_REG
+	 *  1G     14        17         0x1D1
+	 *  2G     15        17         0x1F1
+	 *  4G     16        17         0x211
+	 *  8G     17        17         0x231
+	 * The SDRAM_IDX and REGION_IDX are documented in the ddr dt files. For example for the 4GB:
+	 * https://github.com/FrancescoFerraro/ti-u-boot/blob/dev_ti-u-boot-2024.04_10.01.10.04_var01_RND-2852_am62p_ddr/arch/arm/dts/k3-am62p-var-som-ddr-lp4-50-1866.dtsi
+	 */
+	switch ((long long unsigned int) dram_size) {
+		case SZ_1G:
+			writel( ((readl(AM64_DDRSS_SS_BASE + 0x020) & ~0x3FF) | 0x1D1), AM64_DDRSS_SS_BASE + 0x020);
+			break;
+		case SZ_2G:
+			writel( ((readl(AM64_DDRSS_SS_BASE + 0x020) & ~0x3FF) | 0x1F1), AM64_DDRSS_SS_BASE + 0x020);
+			break;
+		case SZ_4G:
+			writel( ((readl(AM64_DDRSS_SS_BASE + 0x020) & ~0x3FF) | 0x211), AM64_DDRSS_SS_BASE + 0x020);
+			break;
 		case SZ_8G:
 			writel( ((readl(AM64_DDRSS_SS_BASE + 0x020) & ~0x3FF) | 0x231), AM64_DDRSS_SS_BASE + 0x020);
 			break;
 	}
+#endif
 
 	return ret;
 }
