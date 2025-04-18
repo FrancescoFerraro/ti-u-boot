@@ -53,7 +53,6 @@ int var_eeprom_get_dram_size(struct var_eeprom *ep, uint64_t *size)
 	*size = ((uint64_t)ep->dramsize * 128UL) * (1UL << 20);
 
 	return 0;
-
 }
 
 #if defined(CONFIG_DM_I2C)

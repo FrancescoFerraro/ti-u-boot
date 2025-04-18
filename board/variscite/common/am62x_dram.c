@@ -99,8 +99,6 @@ int var_dram_init_mem_size_base(void) {
 	 *  2G     15        17         0x1F1
 	 *  4G     16        17         0x211
 	 *  8G     17        17         0x231
-	 * The SDRAM_IDX and REGION_IDX are documented in the ddr dt files. For example for the 4GB:
-	 * https://github.com/FrancescoFerraro/ti-u-boot/blob/dev_ti-u-boot-2024.04_10.01.10.04_var01_RND-2852_am62p_ddr/arch/arm/dts/k3-am62p-var-som-ddr-lp4-50-1866.dtsi
 	 */
 	switch ((long long unsigned int) dram_size) {
 		case SZ_1G:
