@@ -10,10 +10,8 @@
 #include <spl.h>
 
 #include "k3-ddr-init.h"
-
-int read_eeprom_header(void);
-int var_dram_init_mem_size_base(void);
-int var_dram_init_banksize(void);
+#include "am62x_eeprom.h"
+#include "am62x_dram.h"
 
 int dram_init(void)
 {

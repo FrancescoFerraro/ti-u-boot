@@ -28,8 +28,6 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-int read_eeprom_header(void);
-
 #if CONFIG_IS_ENABLED(SPLASH_SCREEN)
 static struct splash_location default_splash_locations[] = {
 	{
