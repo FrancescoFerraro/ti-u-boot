@@ -61,29 +61,6 @@ void set_dfu_alt_info(char *interface, char *devstr)
 }
 #endif
 
-#if CONFIG_IS_ENABLED(SPLASH_SCREEN)
-static struct splash_location default_splash_locations[] = {
-	{
-		.name = "sf",
-		.storage = SPLASH_STORAGE_SF,
-		.flags = SPLASH_STORAGE_RAW,
-		.offset = 0x700000,
-	},
-	{
-		.name		= "mmc",
-		.storage	= SPLASH_STORAGE_MMC,
-		.flags		= SPLASH_STORAGE_FS,
-		.devpart	= "1:1",
-	},
-};
-
-int splash_screen_prepare(void)
-{
-	return splash_source_load(default_splash_locations,
-				ARRAY_SIZE(default_splash_locations));
-}
-#endif
-
 int board_init(void)
 {
 	return 0;

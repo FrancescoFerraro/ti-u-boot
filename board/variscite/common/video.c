@@ -5,6 +5,7 @@
  * SPDX-License-Identifier:	GPL-2.0+
  */
 
+#include <vsprintf.h>
 #include <splash.h>
 #include <mmc.h>
 #include <env.h>
