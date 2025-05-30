@@ -712,18 +712,6 @@ static int am65_cpsw_port_probe(struct udevice *dev)
 	char portname[32];
 	int ret;
 
-#ifdef CONFIG_DM_REGULATOR
-	device_get_supply_regulator(dev, "phy-supply", &priv->phy_supply);
-
-	if (priv->phy_supply) {
-		ret = regulator_set_enable(priv->phy_supply, true);
-		if (ret) {
-			printf("%s: Error enabling phy supply\n", dev->name);
-			return ret;
-		}
-	}
-#endif
-
 #if CONFIG_IS_ENABLED(DM_GPIO)
 	/* property is optional, don't return error! */
 	ret = gpio_request_by_name(dev, "phy-reset-gpios", 0,
