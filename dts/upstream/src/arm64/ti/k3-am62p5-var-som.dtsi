@@ -135,7 +135,6 @@ TBV !
 &cpsw_port1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&phy0_reset_pins_default>;
-	phy-supply = <&vdd_phy_3v3>;
 	phy-reset-gpios = <&main_gpio0 46 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <10>;
 	phy-reset-post-delay = <100>;
