@@ -54,8 +54,9 @@
 	bootph-all;
 };
 
-
 &cpsw_port1 {
+	/* Variscite MAC addresses assigned by EEPROM/env */
+	/delete-property/ ti,syscon-efuse;
 	bootph-all;
 };
 
