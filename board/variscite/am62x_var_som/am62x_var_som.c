@@ -127,10 +127,8 @@ void spl_board_init(void)
 	       MCU_CTRL_DEVICE_CLKOUT_32K_CTRL);
 
 	enable_caches();
-	if (IS_ENABLED(CONFIG_SPL_SPLASH_SCREEN) && IS_ENABLED(CONFIG_SPL_BMP)) {
-		printf("FF: %s %d\n", __func__, __LINE__);
+	if (IS_ENABLED(CONFIG_SPL_SPLASH_SCREEN) && IS_ENABLED(CONFIG_SPL_BMP))
 		splash_display();
-	}
 
 	/* Init DRAM size for R5/A53 SPL */
 	dram_init_banksize();
@@ -228,19 +226,15 @@ int ft_board_setup(void *blob, struct bd_info *bd)
 {
 	int ret = -1;
 
-	if (IS_ENABLED(CONFIG_FDT_SIMPLEFB)) {
+	if (IS_ENABLED(CONFIG_FDT_SIMPLEFB))
 		ret = fdt_simplefb_enable_and_mem_rsv(blob);
-		printf("FF: %s %d ret=%d\n", __func__, __LINE__, ret);
-	}
+
 	/* If simplefb is not enabled and video is active, then at least reserve
 	 * the framebuffer region to preserve the splash screen while OS is booting
 	 */
 	if (IS_ENABLED(CONFIG_VIDEO) && IS_ENABLED(CONFIG_OF_LIBFDT)) {
-		printf("FF: %s %d\n", __func__, __LINE__);
-		if (ret && video_is_active()) {
-			printf("FF: %s %d ret=%d\n", __func__, __LINE__, ret);
+		if (ret && video_is_active())
 			return fdt_add_fb_mem_rsv(blob);
-		}
 	}
 
 	return 0;
