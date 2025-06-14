@@ -1,0 +1,307 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * VAR-SOM-AM62 dts file for SPLs
+ * Copyright (C) 2021-2022 Texas Instruments Incorporated - https://www.ti.com/
+ * Copyright (C) 2023-2025 Variscite Ltd. - https://www.variscite.com/
+ */
+#include "k3-am625-var-som-symphony-binman.dtsi"
+
+/ {
+#if 0
+	aliases {
+		mmc0 = &sdhci0;
+		mmc1 = &sdhci1;
+	};
+#endif
+#if 0
+	chosen {
+		stdout-path = "serial2:115200n8";
+		tick-timer = &timer1;
+	};
+#endif
+	chosen {
+		tick-timer = &main_timer0;
+	};
+#if 1
+	memory@80000000 {
+		bootph-all;
+	};
+#endif
+};
+
+#if 0
+&cbass_main{
+	bootph-pre-ram;
+
+	timer1: timer@2400000 {
+		clock-frequency = <25000000>;
+		bootph-pre-ram;
+	};
+};
+
+&cbass_mcu {
+	bootph-pre-ram;
+};
+
+&cbass_wakeup {
+	bootph-pre-ram;
+};
+#endif
+
+#if 0
+&chipid {
+	bootph-pre-ram;
+};
+#endif
+
+#if 0
+&cpsw3g {
+	/delete-property/ ranges;
+	/* This is WA because MDIO driver is not DM enabled */
+	bootph-pre-ram;
+
+	cpsw-phy-sel@04044 {
+		compatible = "ti,am64-phy-gmii-sel";
+		reg = <0x0 0x00104044 0x0 0x8>;
+		bootph-pre-ram;
+	};
+};
+
+&cpsw3g_phy0 {
+	bootph-pre-ram;
+};
+
+&cpsw_port2 {
+	bootph-pre-ram;
+};
+#endif
+
+&cpsw_port1 {
+	/* Variscite MAC addresses assigned by EEPROM/env */
+	/delete-property/ ti,syscon-efuse;
+	bootph-pre-ram;
+};
+
+#if 0
+&dmsc {
+	bootph-pre-ram;
+	k3_sysreset: sysreset-controller {
+		compatible = "ti,sci-sysreset";
+		bootph-pre-ram;
+	};
+};
+
+&dmss {
+	bootph-pre-ram;
+};
+
+&fss {
+	bootph-pre-ram;
+};
+
+&k3_clks {
+	bootph-pre-ram;
+};
+
+&k3_pds {
+	bootph-pre-ram;
+};
+
+&k3_reset {
+	bootph-pre-ram;
+};
+#endif
+
+&main_bcdma {
+	reg = <0x00 0x485c0100 0x00 0x100>,
+	      <0x00 0x4c000000 0x00 0x20000>,
+	      <0x00 0x4a820000 0x00 0x20000>,
+	      <0x00 0x4aa40000 0x00 0x20000>,
+	      <0x00 0x4bc00000 0x00 0x100000>,
+	      <0x00 0x48600000 0x00 0x8000>,
+	      <0x00 0x484a4000 0x00 0x2000>,
+	      <0x00 0x484c2000 0x00 0x2000>;
+	reg-names = "gcfg", "bchanrt", "rchanrt", "tchanrt",
+		    "ringrt" , "cfg", "tchan", "rchan";
+};
+
+#if 1
+&main_gpio0 {
+	bootph-all;
+};
+#endif
+
+&main_i2c0 {
+	bootph-all;
+};
+
+&main_i2c0_pins_default {
+	bootph-all;
+};
+
+&main_i2c1 {
+	bootph-all;
+};
+
+&main_i2c1_pins_default {
+	bootph-all;
+};
+
+&main_i2c2 {
+	bootph-all;
+};
+
+&main_i2c2_pins_default {
+	bootph-all;
+};
+
+&main_i2c3 {
+	bootph-all;
+	/delete-property/ power-domains;
+};
+
+&main_i2c3_pins_default {
+	bootph-all;
+};
+
+&main_mdio1_pins_default {
+	bootph-pre-ram;
+};
+
+&main_mmc1_pins_default {
+	bootph-pre-ram;
+};
+
+&main_pktdma {
+	reg = <0x00 0x485c0000 0x00 0x100>,
+	      <0x00 0x4a800000 0x00 0x20000>,
+	      <0x00 0x4aa00000 0x00 0x20000>,
+	      <0x00 0x4b800000 0x00 0x200000>,
+	      <0x00 0x485e0000 0x00 0x10000>,
+	      <0x00 0x484a0000 0x00 0x2000>,
+	      <0x00 0x484c0000 0x00 0x2000>,
+	      <0x00 0x48430000 0x00 0x1000>;
+	reg-names = "gcfg", "rchanrt", "tchanrt", "ringrt",
+		    "cfg", "tchan", "rchan", "rflow";
+	bootph-all;
+};
+
+#if 0
+&main_pmx0 {
+	bootph-pre-ram;
+};
+
+&main_rgmii1_pins_default {
+	bootph-pre-ram;
+};
+
+&main_uart0 {
+	bootph-pre-ram;
+};
+
+&main_uart0_pins_default {
+	bootph-pre-ram;
+};
+
+&main_uart1 {
+	bootph-pre-ram;
+};
+
+&main_usb1_pins_default {
+	bootph-pre-ram;
+};
+
+&mcu_pmx0 {
+	bootph-pre-ram;
+};
+
+&ospi0 {
+	bootph-pre-ram;
+
+	flash@0 {
+		bootph-pre-ram;
+
+		partitions {
+			bootph-pre-ram;
+
+			partition@3fc0000 {
+				bootph-pre-ram;
+			};
+		};
+	};
+};
+
+&secure_proxy_main {
+	bootph-pre-ram;
+};
+#endif
+
+#if 0
+&sdhci0 {
+	bootph-all;
+};
+
+&sdhci1 {
+	bootph-all;
+};
+#endif
+
+&usb0 {
+	dr_mode = "peripheral";
+	/* Since role switching is not supported in U-Boot */
+	/delete-property/ extcon;
+	bootph-all;
+};
+
+#if 0
+&usb1 {
+	bootph-all;
+};
+#endif
+
+&usbss0 {
+	bootph-all;
+};
+
+#if 0
+&usbss1 {
+	bootph-all;
+};
+#endif
+
+#if 1
+&vdd_mmc1 {
+	bootph-all;
+};
+
+&vdd_sd_dv {
+	bootph-all;
+};
+
+&vdd_sd_dv_pins_default {
+	bootph-all;
+};
+#endif
+
+#if 0
+&wkup_conf {
+	bootph-pre-ram;
+};
+
+&wkup_uart0 {
+	bootph-pre-ram;
+};
+#endif
+
+#if 1
+&dss {
+    clocks = <&k3_clks 186 6>,
+		<&k3_clks 186 0>,
+		<&k3_clks 186 2>;
+    ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+};
+#endif
+
+&main_timer0 {
+	clock-frequency = <25000000>;
+};
