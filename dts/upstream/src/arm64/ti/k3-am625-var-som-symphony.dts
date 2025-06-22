@@ -28,16 +28,6 @@
 		ranges;
 
 		stdout-path = "serial2:115200n8";
-
-		framebuffer0: framebuffer@0 {
-			compatible = "simple-framebuffer";
-			power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
-			clocks = <&k3_clks 186 6>,
-				 <&dss_vp1_clk>,
-				 <&k3_clks 186 2>;
-			display = <&dss>;
-			status = "disabled";
-		};
 	};
 
 	panel_lvds: panel-lvds {
@@ -48,22 +38,32 @@
 		width-mm = <153>;
 		height-mm = <86>;
 		data-mapping = "jeida-24";
-		panel-timings {
-			bootph-pre-ram;
-			clock-frequency = <30000>;
-			hactive = <800>;
-			vactive = <480>;
-			hback-porch = <40>;
-			hfront-porch = <40>;
-			vback-porch = <29>;
-			vfront-porch = <13>;
-			hsync-len = <48>;
-			vsync-len = <3>;
-			de-active = <1>;
+
+		display-timings {
+			timing0: timing0 {
+				bootph-pre-ram;
+				clock-frequency = <30000>;
+				hactive = <800>;
+				vactive = <480>;
+				hback-porch = <40>;
+				hfront-porch = <40>;
+				vback-porch = <29>;
+				vfront-porch = <13>;
+				hsync-len = <48>;
+				vsync-len = <3>;
+				de-active = <1>;
+			};
 		};
-		port@0 {
-			lcd_in0: endpoint {
-				remote-endpoint = <&oldi_out0>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				lcd_in0: endpoint {
+					remote-endpoint = <&oldi_out0>;
+				};
 			};
 		};
 	};
@@ -112,25 +112,23 @@
 };
 
 &dss {
-	/* status = "okay"; Video device 'dss@30200000' cannot allocate frame buffer memory - ensure the device is set up before relocation */
-	pinctrl-names = "default";
-	pinctrl-0 = <&main_oldi0_pins_default>;
-};
-
-#if 1
-&dss_oldi_io_ctrl {
 	bootph-all;
+	status = "okay";
 };
-#endif
 
 &dss_ports {
 	#address-cells = <1>;
 	#size-cells = <0>;
+
 	/* VP1: LVDS Output (OLDI TX 0) */
 	port@0 {
 		reg = <0>;
-		oldi_out0: endpoint {
-			remote-endpoint = <&lcd_in0>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		oldi_out0: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&oldi_0_in>;
 		};
 	};
 };
@@ -231,31 +229,6 @@
 		>;
 	};
 
-	main_oldi0_pins_default: main-oldi0-default-pins {
-		pinctrl-single,pins = <
-			AM62X_IOPAD(0x0260, PIN_INPUT, 0) /* (AA5) OLDI0_A0N */
-			AM62X_IOPAD(0x025c, PIN_OUTPUT, 0) /* (Y6) OLDI0_A0P */
-			AM62X_IOPAD(0x0268, PIN_OUTPUT, 0) /* (AD3) OLDI0_A1N */
-			AM62X_IOPAD(0x0264, PIN_OUTPUT, 0) /* (AB4) OLDI0_A1P */
-			AM62X_IOPAD(0x0270, PIN_OUTPUT, 0) /* (Y8) OLDI0_A2N */
-			AM62X_IOPAD(0x026c, PIN_OUTPUT, 0) /* (AA8) OLDI0_A2P */
-			AM62X_IOPAD(0x0278, PIN_OUTPUT, 0) /* (AB6) OLDI0_A3N */
-			AM62X_IOPAD(0x0274, PIN_OUTPUT, 0) /* (AA7) OLDI0_A3P */
-			AM62X_IOPAD(0x0280, PIN_OUTPUT, 0) /* (AC6) OLDI0_A4N */
-			AM62X_IOPAD(0x027c, PIN_OUTPUT, 0) /* (AC5) OLDI0_A4P */
-			AM62X_IOPAD(0x0288, PIN_OUTPUT, 0) /* (AE5) OLDI0_A5N */
-			AM62X_IOPAD(0x0284, PIN_OUTPUT, 0) /* (AD6) OLDI0_A5P */
-			AM62X_IOPAD(0x0290, PIN_OUTPUT, 0) /* (AE6) OLDI0_A6N */
-			AM62X_IOPAD(0x028c, PIN_OUTPUT, 0) /* (AD7) OLDI0_A6P */
-			AM62X_IOPAD(0x0298, PIN_OUTPUT, 0) /* (AD8) OLDI0_A7N */
-			AM62X_IOPAD(0x0294, PIN_OUTPUT, 0) /* (AE7) OLDI0_A7P */
-			AM62X_IOPAD(0x02a0, PIN_OUTPUT, 0) /* (AD4) OLDI0_CLK0N */
-			AM62X_IOPAD(0x029c, PIN_OUTPUT, 0) /* (AE3) OLDI0_CLK0P */
-			AM62X_IOPAD(0x02a8, PIN_OUTPUT, 0) /* (AE4) OLDI0_CLK1N */
-			AM62X_IOPAD(0x02a4, PIN_OUTPUT, 0) /* (AD5) OLDI0_CLK1P */
-		>;
-	};
-
 	/* First pad number is ALW package and second is AMC package */
 	main_uart0_pins_default: main-uart0-default-pins {
 		bootph-all;
@@ -315,6 +288,29 @@
 	};
 };
 
+&oldi0 {
+	status = "okay";
+};
+
+&oldi0_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	port@0 {
+		reg = <0>;
+		oldi_0_in: endpoint {
+			remote-endpoint = <&oldi_out0>;
+		};
+	};
+
+	port@1 {
+		reg = <1>;
+		oldi_0_out: endpoint {
+			remote-endpoint = <&lcd_in0>;
+		};
+	};
+};
+
 /* SD card */
 &sdhci1 {
 	bootph-all;
@@ -329,19 +325,6 @@
 &usb0 {
 	dr_mode = "peripheral";
 };
-
-#if 0
-&usb0 {
-	bootph-all;
-	usb-role-switch;
-
-	port {
-		usb0_hs_ep: endpoint {
-		    remote-endpoint = <&usb_con_hs>;
-	       };
-	};
-};
-#endif
 
 &usb1 {
 	dr_mode = "host";
