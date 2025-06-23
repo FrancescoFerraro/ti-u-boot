@@ -105,6 +105,11 @@
 	bootph-all;
 };
 
+/* Required for USB DFU Boot */
+&usb0_phy_ctrl {
+	bootph-all;
+};
+
 &vdd_mmc1 {
 	bootph-all;
 };
